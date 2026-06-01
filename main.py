@@ -1,26 +1,25 @@
-from core.observer import Subject, ProgressTracker
-from core.command import AnswerCommand
+from core.memento import TestSessionOriginator, SessionCaretaker
 
 if __name__ == "__main__":
-    # --- Перевірка Observer ---
-    test_session = Subject()
-    tracker = ProgressTracker()
-    test_session.attach(tracker)  # Підписуємо трекер на події сесії
+    print("--- Pattern Memento Testing ---")
+    session = TestSessionOriginator()
+    caretaker = SessionCaretaker()
 
-    print("✅ Pattern Observer works:")
-    test_session.notify("Test Session Started.")
+    # Студент починає тест
+    session.answer("Python")
+    session.answer("Encapsulation")
 
-    # --- Перевірка Command ---
-    print("\n✅ Pattern Command works:")
-    user_answers = []
+    # Студент вирішив зробити перерву і зберігає прогрес
+    caretaker.backup(session.save())
 
-    # Створюємо команду відповіді
-    cmd1 = AnswerCommand("What is 2+2?", "4", user_answers)
+    # Студент відповідає далі, але раптом вимикається світло (або він відповідає неправильно)
+    session.answer("Wrong answer")
+    print(f"Current answers before restore: {session.answers}")
 
-    # Виконуємо і сповіщаємо спостерігачів
-    cmd1.execute()
-    test_session.notify(f"Answers submitted: {len(user_answers)}")
+    # Відновлюємо стан з бекапу
+    last_save = caretaker.undo()
+    if last_save:
+        session.restore(last_save)
 
-    # Скасовуємо (Undo) і сповіщаємо спостерігачів
-    cmd1.undo()
-    test_session.notify(f"Answers submitted after undo: {len(user_answers)}")
+    print(f"Current answers after restore: {session.answers}")
+    print("✅ Pattern Memento works: State successfully saved and restored!")
