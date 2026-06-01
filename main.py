@@ -1,20 +1,28 @@
-from core.db_manager import DBManager
-from core.questions import QuestionFactory, QuestionSection, TimedQuestion
+from core.facade import EduSystemFacade
+from core.scoring import StrictScoring, LoyalScoring
 
 if __name__ == "__main__":
-    db = DBManager()
+    # --- Перевірка Фасаду ---
+    facade = EduSystemFacade()
 
-    # Створюємо окремі питання через Factory
-    q1 = QuestionFactory.create_question("choice", "What is polymorphism?", options=["Many forms", "One form"])
-    q2 = QuestionFactory.create_question("text", "Explain encapsulation.")
+    questions = [
+        {"type": "choice", "text": "Is Python compiled?", "options": ["Yes", "No"]},
+        {"type": "text", "text": "What is Facade?"}
+    ]
 
-    # Використовуємо Decorator, щоб додати таймер до другого питання
-    timed_q2 = TimedQuestion(q2, time_limit=60)
+    # Створюємо і зберігаємо тест одним зручним викликом!
+    new_test = facade.create_and_save_test("Advanced Python", questions, 100)
+    print("✅ Pattern Facade works: Test created and saved seamlessly!")
+    print(new_test)
 
-    # Використовуємо Composite, щоб згрупувати їх у секцію
-    section = QuestionSection("OOP Principles")
-    section.add(q1)
-    section.add(timed_q2)
+    # --- Перевірка Стратегії ---
+    correct = ["No", "Pattern"]
+    user_strict = ["Yes", "Pattern"]
+    user_loyal = ["No", "Wrong"]
 
-    print("✅ Patterns Composite & Decorator work:\n")
-    section.display()
+    strict = StrictScoring()
+    loyal = LoyalScoring()
+
+    print("\n✅ Pattern Strategy works:")
+    print(f"Strict score (1 mistake): {strict.calculate_score(correct, user_strict, 100)}")
+    print(f"Loyal score (1 correct out of 2): {loyal.calculate_score(correct, user_loyal, 100)}")
