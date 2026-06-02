@@ -1,27 +1,57 @@
 from abc import ABC, abstractmethod
 
+
 class Command(ABC):
-    """Базова команда"""
+    """
+    @brief Базовий інтерфейс команди.
+
+    Дозволяє інкапсулювати дію користувача як окремий об'єкт.
+
+    Патерн: Command.
+    """
+
     @abstractmethod
-    def execute(self):
+    def execute(self) -> None:
+        """
+        @brief Виконує команду.
+        """
         pass
 
     @abstractmethod
-    def undo(self):
+    def undo(self) -> None:
+        """
+        @brief Скасовує команду.
+        """
         pass
+
 
 class AnswerCommand(Command):
-    """Команда для збереження відповіді користувача з можливістю скасування"""
-    def __init__(self, question_text, answer_text, answers_list):
+    """
+    @brief Команда відповіді на питання.
+
+    Зберігає відповідь користувача та підтримує скасування.
+    """
+
+    def __init__(self, question_text: str, answer_text: str, answers_list: list[str]):
+        """
+        @brief Ініціалізує команду відповіді.
+        @param question_text Текст питання.
+        @param answer_text Текст відповіді.
+        @param answers_list Список відповідей, який змінює команда.
+        """
         self.question = question_text
         self.answer = answer_text
         self.answers_list = answers_list
 
-    def execute(self):
+    def execute(self) -> None:
+        """
+        @brief Додає відповідь до списку.
+        """
         self.answers_list.append(self.answer)
-        print(f"Action: Answered '{self.answer}' to '{self.question}'")
 
-    def undo(self):
+    def undo(self) -> None:
+        """
+        @brief Видаляє останню додану відповідь.
+        """
         if self.answers_list:
-            removed = self.answers_list.pop()
-            print(f"Action: Undo answer '{removed}'")
+            self.answers_list.pop()

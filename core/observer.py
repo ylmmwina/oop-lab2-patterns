@@ -1,24 +1,63 @@
 from abc import ABC, abstractmethod
 
+
 class Observer(ABC):
-    """Базовий клас для підписників"""
+    """
+    @brief Базовий інтерфейс спостерігача.
+
+    Патерн: Observer.
+    """
+
     @abstractmethod
-    def update(self, message):
+    def update(self, message: str) -> None:
+        """
+        @brief Отримує повідомлення від суб'єкта.
+        @param message Текст повідомлення.
+        """
         pass
 
-class Subject:
-    """Об'єкт, за яким спостерігають (наприклад, сесія тесту)"""
-    def __init__(self):
-        self._observers = []
 
-    def attach(self, observer: Observer):
+class Subject:
+    """
+    @brief Суб'єкт, за яким можуть спостерігати інші об'єкти.
+    """
+
+    def __init__(self):
+        """
+        @brief Ініціалізує список спостерігачів.
+        """
+        self._observers: list[Observer] = []
+
+    def attach(self, observer: Observer) -> None:
+        """
+        @brief Додає спостерігача.
+        @param observer Об'єкт-спостерігач.
+        """
         self._observers.append(observer)
 
-    def notify(self, message):
+    def notify(self, message: str) -> None:
+        """
+        @brief Повідомляє всіх спостерігачів.
+        @param message Текст повідомлення.
+        """
         for observer in self._observers:
             observer.update(message)
 
+
 class ProgressTracker(Observer):
-    """Конкретний спостерігач, який слідкує за прогресом"""
-    def update(self, message):
-        print(f"[Tracker] Update received: {message}")
+    """
+    @brief Спостерігач, який зберігає повідомлення про прогрес.
+    """
+
+    def __init__(self):
+        """
+        @brief Ініціалізує порожній список повідомлень.
+        """
+        self.messages: list[str] = []
+
+    def update(self, message: str) -> None:
+        """
+        @brief Зберігає отримане повідомлення.
+        @param message Текст повідомлення.
+        """
+        self.messages.append(message)
