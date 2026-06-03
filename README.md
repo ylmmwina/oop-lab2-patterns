@@ -33,8 +33,9 @@ It allows the user to:
 | Data persistence | Done | `core/db_manager.py`, SQLite |
 | Unit tests | Done | `test_app.py`, pytest |
 | Design patterns | Done | 10 GoF patterns implemented |
-| Code documentation | In progress | Doxygen-style Python docstrings |
-| Project documentation | Done | `README.md`, `docs/patterns.md`, `docs/architecture.md` |
+| Code documentation | Done | Doxygen-style Python docstrings and `Doxyfile` |
+| Project documentation | Done | `README.md`, `docs/` |
+| UML diagrams | Done | `docs/uml/source/`, `docs/uml/images/` |
 
 ## Implemented Design Patterns
 
@@ -58,6 +59,74 @@ The project includes patterns from all three GoF categories:
 - creational patterns;
 - structural patterns;
 - behavioral patterns.
+
+## Documentation
+
+Project documentation is stored in the `docs/` directory.
+
+| Document | Purpose |
+|---|---|
+| `docs/patterns.md` | Detailed catalog of implemented GoF design patterns |
+| `docs/architecture.md` | Architecture overview and data flow |
+| `docs/code-documentation.md` | Code documentation and Doxygen usage |
+| `docs/uml/README.md` | UML diagram index |
+
+## UML Diagrams
+
+UML diagrams are stored in:
+
+```text
+docs/uml/
+```
+
+PlantUML source files are stored in:
+
+```text
+docs/uml/source/
+```
+
+Generated PNG images are stored in:
+
+```text
+docs/uml/images/
+```
+
+The repository includes both `.puml` source files and `.png` images.
+
+This makes the diagrams editable and also easy to view directly on GitHub.
+
+Implemented UML diagrams:
+
+- Use Case diagram;
+- Class diagram;
+- Component diagram;
+- Sequence diagram;
+- Activity diagram;
+- State diagram.
+
+## Code Documentation
+
+The project uses Doxygen-style Python docstrings.
+
+The Doxygen configuration file is:
+
+```text
+Doxyfile
+```
+
+To generate HTML documentation locally, run:
+
+```bash
+doxygen Doxyfile
+```
+
+The generated documentation will be placed in:
+
+```text
+docs/api/html/
+```
+
+Generated HTML files are ignored by Git because they are build artifacts.
 
 ## Project Structure
 
