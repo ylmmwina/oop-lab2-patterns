@@ -1,0 +1,29 @@
+@startuml
+title EduPattern Studio - Activity Diagram
+
+start
+
+:User opens application;
+
+if (Create sample test?) then (yes)
+    :Prepare predefined question data;
+    :Call EduSystemFacade;
+    :Build EducationalTest with Builder;
+    :Create questions with QuestionFactory;
+    :Save test metadata with DBManager;
+    :Show success message in GUI;
+else (no)
+    :Wait for another action;
+endif
+
+if (Show saved tests?) then (yes)
+    :Call EduSystemFacade;
+    :Fetch saved tests from SQLite;
+    :Display saved tests in GUI;
+else (no)
+    :Keep current screen;
+endif
+
+stop
+
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+title EduPattern Studio - Test Session State Diagram
+
+[*] --> NotStarted
+
+NotStarted --> InProgress : start session
+InProgress --> AnswerSaved : answer question
+AnswerSaved --> InProgress : next question
+InProgress --> SnapshotSaved : save state
+SnapshotSaved --> InProgress : continue
+InProgress --> Restored : restore state
+Restored --> InProgress : continue
+InProgress --> Completed : all questions answered
+Completed --> [*]
+
+@enduml

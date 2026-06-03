@@ -1,0 +1,44 @@
+@startuml
+title EduPattern Studio - Component Diagram
+
+package "GUI Layer" {
+    component "CustomTkinter GUI\nmain.py" as GUI
+}
+
+package "Facade Layer" {
+    component "EduSystemFacade\ncore/facade.py" as Facade
+}
+
+package "Core Domain Layer" {
+    component "Questions\ncore/questions.py" as Questions
+    component "Tests Builder\ncore/tests.py" as Tests
+    component "Scoring\ncore/scoring.py" as Scoring
+    component "Command\ncore/command.py" as Command
+    component "Memento\ncore/memento.py" as Memento
+    component "Observer\ncore/observer.py" as Observer
+}
+
+package "Persistence Layer" {
+    component "DBManager\ncore/db_manager.py" as DB
+    database "SQLite database" as SQLite
+}
+
+package "Testing" {
+    component "pytest tests\ntest_app.py" as Pytest
+}
+
+GUI --> Facade
+Facade --> Tests
+Facade --> DB
+Tests --> Questions
+DB --> SQLite
+
+Pytest --> Questions
+Pytest --> Tests
+Pytest --> Scoring
+Pytest --> Command
+Pytest --> Memento
+Pytest --> Observer
+Pytest --> DB
+
+@enduml

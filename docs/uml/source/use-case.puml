@@ -1,0 +1,23 @@
+@startuml
+title EduPattern Studio - Use Case Diagram
+
+left to right direction
+
+actor "Teacher" as Teacher
+
+rectangle "EduPattern Studio" {
+    usecase "Create sample test" as UC_CreateTest
+    usecase "Save test metadata" as UC_SaveTest
+    usecase "View saved tests" as UC_ViewTests
+    usecase "Run unit tests" as UC_RunTests
+    usecase "Generate code documentation" as UC_GenerateDocs
+}
+
+Teacher --> UC_CreateTest
+Teacher --> UC_ViewTests
+Teacher --> UC_RunTests
+Teacher --> UC_GenerateDocs
+
+UC_CreateTest --> UC_SaveTest : <<include>>
+
+@enduml

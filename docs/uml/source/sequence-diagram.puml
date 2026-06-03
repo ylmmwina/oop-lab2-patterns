@@ -1,0 +1,36 @@
+@startuml
+title EduPattern Studio - Sequence Diagram
+
+actor Teacher
+participant "EduApp\nmain.py" as GUI
+participant "EduSystemFacade\ncore/facade.py" as Facade
+participant "EducationalTestBuilder\ncore/tests.py" as Builder
+participant "QuestionFactory\ncore/questions.py" as Factory
+participant "DBManager\ncore/db_manager.py" as DB
+database "SQLite" as SQLite
+
+Teacher -> GUI : Click "Create and save test"
+GUI -> Facade : create_and_save_test(title, questions_data, max_score)
+
+Facade -> Builder : reset()
+Facade -> Builder : set_title(title)
+Facade -> Builder : set_max_score(max_score)
+
+loop for each question
+    Facade -> Builder : add question
+    Builder -> Factory : create_question(type, text, options)
+    Factory --> Builder : Question
+end
+
+Facade -> Builder : build()
+Builder --> Facade : EducationalTest
+
+Facade -> DB : execute_query(INSERT test metadata)
+DB -> SQLite : INSERT INTO tests
+SQLite --> DB : success
+DB --> Facade : cursor
+
+Facade --> GUI : EducationalTest
+GUI --> Teacher : Show success message
+
+@enduml

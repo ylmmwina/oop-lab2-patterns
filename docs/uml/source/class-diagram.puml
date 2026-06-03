@@ -1,0 +1,171 @@
+@startuml
+title EduPattern Studio - Class Diagram
+
+skinparam classAttributeIconSize 0
+
+class EduApp {
+    - facade: EduSystemFacade
+    + create_test(): void
+    + show_saved_tests(): void
+}
+
+class EduSystemFacade {
+    - db: DBManager
+    - builder: EducationalTestBuilder
+    + create_and_save_test(title, questions_data, max_score)
+    + get_saved_tests()
+}
+
+class DBManager {
+    - _instance
+    - connection
+    - cursor
+    + execute_query(query, params)
+    + fetch_all(query, params)
+}
+
+class EducationalTest {
+    + title: str
+    + questions: list
+    + max_score: int
+}
+
+class EducationalTestBuilder {
+    - _test: EducationalTest
+    + reset()
+    + set_title(title)
+    + add_choice_question(text, options)
+    + add_text_question(text)
+    + set_max_score(score)
+    + build(): EducationalTest
+}
+
+abstract class QuestionComponent {
+    + display(indent): void
+}
+
+abstract class Question {
+    + text: str
+    + get_question_type(): str
+    + display(indent): void
+}
+
+class ChoiceQuestion {
+    + options: list
+    + get_question_type(): str
+}
+
+class TextQuestion {
+    + get_question_type(): str
+}
+
+class QuestionSection {
+    + title: str
+    + children: list
+    + add(component): void
+    + display(indent): void
+}
+
+class QuestionFactory {
+    + create_question(q_type, text, kwargs): Question
+}
+
+class QuestionDecorator {
+    - wrapped: QuestionComponent
+    + display(indent): void
+}
+
+class TimedQuestion {
+    + time_limit: int
+    + display(indent): void
+}
+
+abstract class ScoringStrategy {
+    + calculate_score(correct_answers, user_answers, max_score): int
+}
+
+class StrictScoring {
+    + calculate_score(correct_answers, user_answers, max_score): int
+}
+
+class LoyalScoring {
+    + calculate_score(correct_answers, user_answers, max_score): int
+}
+
+abstract class Command {
+    + execute(): void
+    + undo(): void
+}
+
+class AnswerCommand {
+    - question: str
+    - answer: str
+    - answers_list: list
+    + execute(): void
+    + undo(): void
+}
+
+class SessionMemento {
+    + current_index: int
+    + answers: list
+}
+
+class ExamSession {
+    + current_index: int
+    + answers: list
+    + answer(answer_text): void
+    + save(): SessionMemento
+    + restore(memento): void
+}
+
+class SessionCaretaker {
+    + history: list
+    + backup(memento): void
+    + undo(): SessionMemento
+}
+
+abstract class Observer {
+    + update(message): void
+}
+
+class Subject {
+    - observers: list
+    + attach(observer): void
+    + notify(message): void
+}
+
+class ProgressTracker {
+    + messages: list
+    + update(message): void
+}
+
+EduApp --> EduSystemFacade
+EduSystemFacade --> DBManager
+EduSystemFacade --> EducationalTestBuilder
+EducationalTestBuilder --> EducationalTest
+EducationalTestBuilder --> QuestionFactory
+EducationalTest o-- Question
+
+QuestionComponent <|-- Question
+QuestionComponent <|-- QuestionSection
+QuestionComponent <|-- QuestionDecorator
+
+Question <|-- ChoiceQuestion
+Question <|-- TextQuestion
+
+QuestionSection o-- QuestionComponent
+QuestionDecorator --> QuestionComponent
+QuestionDecorator <|-- TimedQuestion
+
+ScoringStrategy <|-- StrictScoring
+ScoringStrategy <|-- LoyalScoring
+
+Command <|-- AnswerCommand
+
+ExamSession --> SessionMemento
+SessionCaretaker o-- SessionMemento
+
+Observer <|-- ProgressTracker
+Subject o-- Observer
+
+@enduml
